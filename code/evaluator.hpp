@@ -15,8 +15,8 @@
 
 class Evaluator {
   public: 
-    virtual void evaluate(const Model&) {} 
-    virtual void evaluateAUC(const Model&) {}
+    virtual void evaluate(const Model&)=0; 
+    virtual void evaluateAUC(const Model&){}
     virtual void load_files(const std::string&, const std::string&, std::vector<int>&) = 0;
  
     std::vector<int> k;
@@ -103,7 +103,7 @@ void EvaluatorBinary::load_files (const std::string& train_repo, const std::stri
 void EvaluatorBinary::evaluate (const Model& model) {
   vector<int> precision(k.size(), 0);
 
-	#pragma omp parallel
+	#pragma omp parallel for
 	for (int i = 0; i < model.n_users; ++i) {
 		std::priority_queue<std::pair<int, double>, std::vector<std::pair<int, double> >, pkcomp> pq;	
 		for (int j = 0; j < model.n_items; ++j) {
